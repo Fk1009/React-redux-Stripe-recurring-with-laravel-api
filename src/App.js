@@ -8,7 +8,7 @@ import Protected from './helpers/Protected';
 import Checkout from './features/checkout/Checkout';
 import Blog from './components/Blog';
 import Home from './components/Home';
-
+import Profile from './components/Profile';
 
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
         <Route path="/home"  element={<Home/>}/>
         {/* <Route path="/"  element={<Dashboard/>}/> */}
         <Route path="/" element={ <Protected cmp = {Dashboard} /> } />
+        <Route path="/profile" element={ <Protected cmp = {Profile} /> } />
         <Route path="/checkout/:plan_id" element={ <Protected cmp = {Checkout} /> } />
         </Routes>
       </Router>

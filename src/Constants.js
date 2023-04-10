@@ -24,6 +24,7 @@ export const CARD_MONTH_INVALID = "Invalid Expiry Month";
 export const CARD_YEAR_REQ =  "Please Enter Your Card Expiry Year";
 export const CARD_YEAR_INVALID =  "Invalid Expiry Year";
 export const CARD_CVV_REQ = "Please Enter Your CVV";
+export const INVALID_CVV = "Invalid CVV";
 export const SUBSCRIPTION_ADD_SUCCESS = 'Subscription Added Successfully!!!';
 export const SUBSCRIPTION_ALREADY_ACTIVE = 'This Plan is Already Active for you!';
 export const SUBSCRIPTION_UPDATE_SUCCESS = 'Subscription Updated Successfully!!!';

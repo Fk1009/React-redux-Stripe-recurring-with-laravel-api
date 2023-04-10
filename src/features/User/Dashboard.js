@@ -12,18 +12,21 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isFetching, isError } = useSelector(userSelector);
+  const token = localStorage.getItem('token');
+  const user = useSelector(userSelector);
+  const planData = user.data;
  
   useEffect(() => {
-    dispatch(fetchUserBytoken({ token: localStorage.getItem('token') }));
+    if (token != null) {
+    dispatch(fetchUserBytoken({ token: token }));
+  }
   }, []);
 
   useEffect(() => {
-    dispatch(fetchUserPlans({ token: localStorage.getItem('token') }));
-  }, []);
-
-const user = useSelector(userSelector);
-const planData = user.data;
-//console.log(planData,'plandata');
+    if (token != null) {
+    dispatch(fetchUserPlans({ token: token }));
+  }
+ }, []);
 
   useEffect(() => {
     if (isError) {
@@ -43,13 +46,13 @@ const planData = user.data;
       <>
     <div className="container mx-auto">
       {isFetching ? (
-       <div class="loading">
-       <div class="loader"></div>
+       <div className="loading">
+       <div className="loader"></div>
    </div>
       ) : (
         <Fragment>
-          <NavBar/>
-          <div class="h-screen flex justify-center items-center bg-gradient-to-t from-indigo-600 via-indigo-700 to-indigo-700">
+          <NavBar />
+          <div className="h-screen flex justify-center items-center bg-gradient-to-t from-indigo-600 via-indigo-700 to-indigo-700">
           {planData?.length>0 && planData.map((each,index)=>{
 	   			return <Plans plandata={each} key={index} />
 	   		})}

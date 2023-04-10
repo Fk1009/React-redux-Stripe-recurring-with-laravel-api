@@ -10,7 +10,7 @@ import { checkoutState } from "./CheckoutSlice";
 import { Fragment } from "react";
 import { useFormik } from "formik";
 import toast from 'react-hot-toast';
-import { CARD_CVV_REQ, CARD_INVALID, CARD_MONTH_INVALID, CARD_MONTH_REQ, CARD_NUMBER_REQ, CARD_YEAR_INVALID, CARD_YEAR_REQ } from "../../Constants";
+import { CARD_CVV_REQ, CARD_INVALID, CARD_MONTH_INVALID, CARD_MONTH_REQ, CARD_NUMBER_REQ, CARD_YEAR_INVALID, CARD_YEAR_REQ,INVALID_CVV } from "../../Constants";
 
 const validateCheckoutCard = (userData) => {
   const errors = {};
@@ -38,6 +38,8 @@ const validateCheckoutCard = (userData) => {
 
   if (!userData.cvc) {
     errors.cvc = CARD_CVV_REQ;
+  }else if(!/^[0-9]{3}$/i.test(userData.cvc)){
+    errors.cvc = INVALID_CVV;
   }
 
   return errors;
@@ -46,6 +48,7 @@ const validateCheckoutCard = (userData) => {
 function Checkout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
   const { isFetching, isSuccess, isError, errorMessage,successMesssage } = useSelector(
     checkoutState
   );
@@ -61,10 +64,13 @@ function Checkout() {
 
     validate: validateCheckoutCard,
     onSubmit: (values) => {
+      if (token != '') {
+        
+      
       let params = {
         ...values,
         plan_id: plan_id,
-        token: localStorage.getItem("token"),
+        token: token,
        
       }
       dispatch(
@@ -78,7 +84,7 @@ function Checkout() {
         toast.error(errorMessage);
         dispatch(clearState());
       }
-    },
+    }  },
   });
 
   useEffect(() => {
@@ -102,38 +108,38 @@ function Checkout() {
   return (
     <div className="container mx-auto">
       {isFetching ? (
-        <div class="loading">
-          <div class="loader"></div>
+        <div className="loading">
+          <div className="loader"></div>
         </div>
       ) : (
         <Fragment>
           <NavBar />
-          <div class="grid sm:px-10 lg:grid-cols-1 lg:px-20 xl:px-32">
-            <div class="mt-12 bg-gray-50 px-4 pt-8 lg:mt-0">
-              <p class="text-xl font-medium">Payment Details</p>
-              <p class="text-gray-400">
+          <div className="grid sm:px-10 lg:grid-cols-1 lg:px-20 xl:px-32">
+            <div className="mt-12 bg-gray-50 px-4 pt-8 lg:mt-0">
+              <p className="text-xl font-medium">Payment Details</p>
+              <p className="text-gray-400">
                 Complete your Subscription by providing your payment details.
               </p>
 
               <form onSubmit={formik.handleSubmit}>
-                <div class="">
+                <div className="">
                   <label
                     for="card-holder"
-                    class="mt-4 mb-2 block text-sm font-medium"
+                    className="mt-4 mb-2 block text-sm font-medium"
                   >
                     Card Holder(Optional)
                   </label>
-                  <div class="relative">
+                  <div className="relative">
                     <input
-                      class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                      className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                       placeholder="Your full name here"
                       type="text"
                       name="card_name"
                     />
-                    <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 text-gray-400"
+                        className="h-4 w-4 text-gray-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -149,17 +155,17 @@ function Checkout() {
                   </div>
                   <label
                     for="card-no"
-                    class="mt-4 mb-2 block text-sm font-medium"
+                    className="mt-4 mb-2 block text-sm font-medium"
                   >
                     Card Details
                   </label>
-                  <div class="flex">
-                    <div class="relative w-7/12 flex-shrink-0">
+                  <div className="flex">
+                    <div className="relative w-7/12 flex-shrink-0">
                       <input
                         type="text"
                         id="card_number"
                         name="card_number"
-                        class="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                        className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                         placeholder="xxxx-xxxx-xxxx-xxxx"
                         value={formik.values.card_number}
                         onChange={formik.handleChange}
@@ -167,14 +173,14 @@ function Checkout() {
                       />
                       {formik.touched.card_number &&
                       formik.errors.card_number ? (
-                        <span class="text-red-500 text-xs italic">
+                        <span className="text-red-500 text-xs italic">
                           {formik.errors.card_number}
                         </span>
                       ) : null}
 
-                      <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-2">
                         <svg
-                          class="h-4 w-4 text-gray-400"
+                          className="h-4 w-4 text-gray-400"
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
                           height="16"
@@ -186,23 +192,26 @@ function Checkout() {
                         </svg>
                       </div>
                     </div>
+                    <div>
                     <input
                       type="text"
                       name="exp_month"
-                      class="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                      className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                       placeholder="MM"
                       value={formik.values.exp_month}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
                     {formik.touched.exp_month && formik.errors.exp_month ? (
-                      <span class="text-red-500 text-xs italic">
+                      <span className="text-red-500 text-xs italic">
                         {formik.errors.exp_month}
                       </span>
                     ) : null}
+                    </div>
+                    <div>
                     <input
                       type="text"
-                      class="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                      className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                       placeholder="YYYY"
                       name="exp_year"
                       value={formik.values.exp_year}
@@ -210,13 +219,15 @@ function Checkout() {
                       onBlur={formik.handleBlur}
                     />
                     {formik.touched.exp_year && formik.errors.exp_year ? (
-                      <span class="text-red-500 text-xs italic">
+                      <span className="text-red-500 text-xs italic">
                         {formik.errors.exp_year}
                       </span>
                     ) : null}
+                    </div>
+                  <div>
                     <input
                       type="text"
-                      class="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                      className="w-5/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                       placeholder="CVC"
                       name="cvc"
                       value={formik.values.cvc}
@@ -224,33 +235,34 @@ function Checkout() {
                       onBlur={formik.handleBlur}
                     />
                     {formik.touched.cvc && formik.errors.cvc ? (
-                      <span class="text-red-500 text-xs italic">{formik.errors.cvc}</span>
+                      <span className="text-red-500 text-xs italic">{formik.errors.cvc}</span>
                     ) : null}
+                   </div>
                   </div>
 
-                  <div class="mt-6 border-t border-b py-2">
-                    <div class="flex items-center justify-between">
-                      <p class="text-sm font-medium text-gray-900">Plan Name</p>
+                  <div className="mt-6 border-t border-b py-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">Plan Name</p>
 
-                      <p class="font-semibold text-gray-900">
+                      <p className="font-semibold text-gray-900">
                         {singlePlan && singlePlan.data
                           ? singlePlan.data.name
                           : null}
                       </p>
                     </div>
-                    <div class="flex items-center justify-between">
-                      <p class="text-sm font-medium text-gray-900">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">
                         Plan Duration
                       </p>
-                      <p class="font-semibold text-gray-900">
+                      <p className="font-semibold text-gray-900">
                         {singlePlan && singlePlan.data
                           ? singlePlan.data.interval
                           : null}
                       </p>
                     </div>
-                    <div class="flex items-center justify-between">
-                      <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                      <p class="font-semibold text-gray-900">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">Subtotal</p>
+                      <p className="font-semibold text-gray-900">
                         {singlePlan && singlePlan.data
                           ? singlePlan.data.currency
                           : null}
@@ -260,9 +272,9 @@ function Checkout() {
                       </p>
                     </div>
                   </div>
-                  <div class="mt-6 flex items-center justify-between">
-                    <p class="text-sm font-medium text-gray-900">Total</p>
-                    <p class="text-2xl font-semibold text-gray-900">
+                  <div className="mt-6 flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-900">Total</p>
+                    <p className="text-2xl font-semibold text-gray-900">
                       {singlePlan && singlePlan.data
                         ? singlePlan.data.currency
                         : null}
@@ -274,7 +286,7 @@ function Checkout() {
                 </div>
                 <button
                   type="submit"
-                  class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                  className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
                 >
                   Buy Beneficiary Plan
                 </button>

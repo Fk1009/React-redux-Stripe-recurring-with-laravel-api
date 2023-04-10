@@ -1,24 +1,26 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { loginUser, userSelector, clearState } from './UserSlice';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import NavBar from '../layouts/NavBar';
+import { EMAIL_INVALID, EMAIL_REQ, PASS_REQ,PASS_INVALID } from '../../Constants';
 
 const validateLoginUser = userData => {
     const errors = {};
     if (!userData.email) {
-      errors.email = "*Required";
+      errors.email = EMAIL_REQ;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(userData.email)) {
-      errors.email = "Invalid Email";
+      errors.email = EMAIL_INVALID;
     }
   
     if (!userData.password) {
-      errors.password = "*Required";
-    } 
+      errors.password = PASS_REQ;
+    // } else if (!/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(userData.password)) {
+    // errors.password = PASS_INVALID;
+  }
     return errors;
   };
   
@@ -93,7 +95,7 @@ const Login = ({}) => {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     value={formik.values.email}
                     onChange={formik.handleChange} onBlur={formik.handleBlur}/>
-                    {formik.touched.email && formik.errors.email ? <span style={{color:'red',float:'left'}}>{formik.errors.email}</span> : null}
+                    {formik.touched.email && formik.errors.email ? <span class="text-red-500 text-xs italic">{formik.errors.email}</span> : null}
 
                 </div>
               </div>
@@ -115,7 +117,7 @@ const Login = ({}) => {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     value={formik.values.password}
                     onChange={formik.handleChange} onBlur={formik.handleBlur} />
-                    {formik.touched.password && formik.errors.password ? <span style={{color:'red',float:'left'}}>{formik.errors.password}</span> : null}
+                    {formik.touched.password && formik.errors.password ? <span class="text-red-500 text-xs italic">{formik.errors.password}</span> : null}
                 </div>
               </div>
 

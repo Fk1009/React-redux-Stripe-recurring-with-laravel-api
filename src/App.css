@@ -30,3 +30,6 @@
   transform: rotate(0deg);
 }
 }
+.dropdown:hover .dropdown-menu {
+  display: block;
+}

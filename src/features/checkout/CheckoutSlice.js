@@ -5,7 +5,6 @@ export const fetchUserPlanById = createAsyncThunk(
   'users/fetchPlan',
   async ({ token,planId }, thunkAPI) => {
     try {
-      
       const response = await fetch(
         'http://localhost:8000/api/plans'+'/'+ planId,
         {
