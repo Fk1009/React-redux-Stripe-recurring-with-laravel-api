@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
+import { SINGLE_PLAN_API, SUBSCRIPTION_API } from '../../Constants';
 
 export const fetchUserPlanById = createAsyncThunk(
   'users/fetchPlan',
   async ({ token,planId }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:8000/api/plans'+'/'+ planId,
+        SINGLE_PLAN_API+'/'+ planId,
         {
           method: 'GET',
           headers: {
@@ -37,7 +37,7 @@ export const addSubscription = createAsyncThunk(
   async ({ token, card_number, exp_month, exp_year,cvc,plan_id }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:8000/api/subscribe',
+        SUBSCRIPTION_API,
         {
           method: 'POST',
           headers: {
@@ -59,6 +59,7 @@ export const addSubscription = createAsyncThunk(
       if (response.status === 201) {
         return data
       } else {
+        console.log('data', data, response.status);
         return thunkAPI.rejectWithValue(data);
       }
 
@@ -115,6 +116,7 @@ export const checkoutSlice = createSlice({
       state.data = payload;
     },
     [addSubscription.rejected]: (state, { payload }) => {
+      console.log(payload.message)
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;

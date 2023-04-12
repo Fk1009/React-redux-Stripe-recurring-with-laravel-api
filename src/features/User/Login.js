@@ -18,8 +18,8 @@ const validateLoginUser = userData => {
   
     if (!userData.password) {
       errors.password = PASS_REQ;
-    // } else if (!/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(userData.password)) {
-    // errors.password = PASS_INVALID;
+    } else if (!/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(userData.password)) {
+    errors.password = PASS_INVALID;
   }
     return errors;
   };

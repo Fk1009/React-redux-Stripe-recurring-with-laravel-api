@@ -11,6 +11,7 @@ export const SUBSCRIPTION_API = "http://localhost:8000/api/subscribe";
 export const EMAIL_REQ = 'Please Enter Your Email';
 export const EMAIL_INVALID = 'Invalid Email';
 export const PASS_REQ = 'Please Enter Your password';
+export const PASS_UNMATCH = 'Password doesnt matches';
 export const PASS_INVALID = 'Invalid Password,8 characters length, 2 letters in Upper Case,1 Special Character (!@#$&*),2 numerals (0-9),3 letters in Lower Case';
 export const LOGIN_SUCCESS = "User Loggedin Successfully !";
 export const TRY_AGAIN = "Please check Again!";

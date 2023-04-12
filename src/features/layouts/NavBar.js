@@ -15,7 +15,7 @@ const NavBar = () => {
     dispatch(clearState());
     navigate("/login");
   };
-  
+
   return (
     <Fragment>
       <nav>

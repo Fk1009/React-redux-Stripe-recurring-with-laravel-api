@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { LOGIN_API, PLANS_API, REGISTER_API, USER_PROFILE_API } from '../../Constants';
 
 export const signupUser = createAsyncThunk(
   'users/signupUser',
   async ({ name, email, password, c_password }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:8000/api/register',
+        REGISTER_API,
         {
           method: 'POST',
           headers: {
@@ -39,7 +40,7 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:8000/api/login',
+        LOGIN_API,
         {
           method: 'POST',
           headers: {
@@ -72,7 +73,7 @@ export const fetchUserBytoken = createAsyncThunk(
   async ({ token }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:8000/api/subscribe',
+        USER_PROFILE_API,
         {
           method: 'GET',
           headers: {
@@ -103,7 +104,7 @@ export const fetchUserPlans = createAsyncThunk(
   async ({ token }, thunkAPI) => {
     try {
       const response = await fetch(
-        'http://localhost:8000/api/plans',
+        PLANS_API,
         {
           method: 'GET',
           headers: {

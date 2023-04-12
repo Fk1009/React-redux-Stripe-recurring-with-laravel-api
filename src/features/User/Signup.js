@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../layouts/NavBar';
 import toast from 'react-hot-toast';
 import { useFormik } from 'formik';
-import { NAME_REQ,MAX_LENGTH,EMAIL_REQ,EMAIL_INVALID,PASS_INVALID,PASS_REQ} from '../../Constants';
+import { NAME_REQ,MAX_LENGTH,EMAIL_REQ,EMAIL_INVALID,PASS_INVALID,PASS_REQ, PASS_UNMATCH} from '../../Constants';
 
 
 const validateRegisterUser = userData => {
@@ -14,7 +14,7 @@ const validateRegisterUser = userData => {
   if (!userData.name) {
     errors.name = NAME_REQ;
   } else if (userData.name.length > 20) {
-    errors.Name = MAX_LENGTH;
+    errors.name = MAX_LENGTH;
   }
   if (!userData.email) {
     errors.email = EMAIL_REQ;
@@ -30,7 +30,11 @@ const validateRegisterUser = userData => {
 
   if (!userData.c_password) {
     errors.c_password = PASS_REQ;
-  } 
+  } else if (!/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(userData.c_password)) {
+    errors.c_password = PASS_INVALID;
+  } else if (userData.password != userData.c_password){
+    errors.c_password = PASS_UNMATCH;
+  }
   return errors;
 };
 
@@ -110,7 +114,7 @@ const Signup = () => {
                     value={formik.values.name}
                     onChange={formik.handleChange} onBlur={formik.handleBlur}
                     autoComplete="name"
-                    required
+                   
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                     {formik.touched.name &&
@@ -140,7 +144,7 @@ const Signup = () => {
                     name="email"
                     type="email"
                     autoComplete="email"
-                    required
+                  
                     value={formik.values.email}
                     onChange={formik.handleChange} onBlur={formik.handleBlur}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -169,7 +173,6 @@ const Signup = () => {
                     value={formik.values.password}
                     onChange={formik.handleChange} onBlur={formik.handleBlur}
                     autoComplete="current-password"
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                   {formik.touched.password &&
@@ -196,7 +199,6 @@ const Signup = () => {
                     value={formik.values.c_password}
                     onChange={formik.handleChange} onBlur={formik.handleBlur}
                     autoComplete="current-password"
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                    {formik.touched.c_password &&
