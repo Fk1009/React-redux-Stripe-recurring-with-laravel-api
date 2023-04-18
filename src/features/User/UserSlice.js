@@ -186,6 +186,7 @@ export const userSlice = createSlice({
     [fetchUserBytoken.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
       state.isSuccess = true;
+      state.data = payload;
       state.email = payload.user.email;
       state.name = payload.user.name;
     },

@@ -1,15 +1,22 @@
-import React, { Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { signupUser, userSelector, clearState } from './UserSlice';
-import { useNavigate } from 'react-router-dom';
-import NavBar from '../layouts/NavBar';
-import toast from 'react-hot-toast';
-import { useFormik } from 'formik';
-import { NAME_REQ,MAX_LENGTH,EMAIL_REQ,EMAIL_INVALID,PASS_INVALID,PASS_REQ, PASS_UNMATCH} from '../../Constants';
+import React, { Fragment, useEffect } from "react";
+import NavBar from "../layouts/NavBar";
+import toast from "react-hot-toast";
+import { useFormik } from "formik";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { signupUser, userSelector, clearState } from "./UserSlice";
+import { useNavigate } from "react-router-dom";
+import {
+  NAME_REQ,
+  MAX_LENGTH,
+  EMAIL_REQ,
+  EMAIL_INVALID,
+  PASS_INVALID,
+  PASS_REQ,
+  PASS_UNMATCH,
+} from "../../Constants";
 
-
-const validateRegisterUser = userData => {
+const validateRegisterUser = (userData) => {
   const errors = {};
   if (!userData.name) {
     errors.name = NAME_REQ;
@@ -18,51 +25,56 @@ const validateRegisterUser = userData => {
   }
   if (!userData.email) {
     errors.email = EMAIL_REQ;
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(userData.email)) {
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(userData.email)
+  ) {
     errors.email = EMAIL_INVALID;
   }
 
   if (!userData.password) {
     errors.password = PASS_REQ;
-  } else if (!/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(userData.password)) {
+  } else if (
+    !/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(
+      userData.password
+    )
+  ) {
     errors.password = PASS_INVALID;
   }
 
   if (!userData.c_password) {
     errors.c_password = PASS_REQ;
-  } else if (!/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(userData.c_password)) {
+  } else if (
+    !/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i.test(
+      userData.c_password
+    )
+  ) {
     errors.c_password = PASS_INVALID;
-  } else if (userData.password != userData.c_password){
+  } else if (userData.password != userData.c_password) {
     errors.c_password = PASS_UNMATCH;
   }
   return errors;
 };
 
-
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isFetching, isSuccess, isError, errorMessage } = useSelector(
-    userSelector
-  );
+  const { isFetching, isSuccess, isError, errorMessage } =
+    useSelector(userSelector);
 
-
-
-  const formik=useFormik({
-    initialValues:{
-      name:'',
-      email:'',
-      password:'',
-      c_password:''
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      c_password: "",
     },
-  
-    validate:validateRegisterUser,
-    onSubmit:(data)=>{
+
+    validate: validateRegisterUser,
+    onSubmit: (data) => {
       //console.log(data);
       dispatch(signupUser(data));
-      
-    }
+    },
   });
 
   useEffect(() => {
@@ -74,11 +86,11 @@ const Signup = () => {
   useEffect(() => {
     if (isSuccess) {
       dispatch(clearState());
-      navigate('/');
+      navigate("/");
     }
 
     if (isError) {
-        console.log(errorMessage);
+      console.log(errorMessage);
       toast.error(errorMessage);
       dispatch(clearState());
     }
@@ -86,7 +98,7 @@ const Signup = () => {
 
   return (
     <Fragment>
-      <NavBar/>
+      <NavBar />
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -112,17 +124,16 @@ const Signup = () => {
                     id="name"
                     name="name"
                     value={formik.values.name}
-                    onChange={formik.handleChange} onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     autoComplete="name"
-                   
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                    {formik.touched.name &&
-                      formik.errors.name ? (
-                        <span className="text-red-500 text-xs italic">
-                          {formik.errors.name}
-                        </span>
-                      ) : null}
+                  {formik.touched.name && formik.errors.name ? (
+                    <span className="text-red-500 text-xs italic">
+                      {formik.errors.name}
+                    </span>
+                  ) : null}
                 </div>
               </div>
               <div>
@@ -133,28 +144,27 @@ const Signup = () => {
                   Email address
                 </label> */}
                 <div className="mt-1">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email
-                </label>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
                   <input
                     id="email"
                     name="email"
                     type="email"
                     autoComplete="email"
-                  
                     value={formik.values.email}
-                    onChange={formik.handleChange} onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                  {formik.touched.email &&
-                      formik.errors.email ? (
-                        <span className="text-red-500 text-xs italic">
-                          {formik.errors.email}
-                        </span>
-                      ) : null}
+                  {formik.touched.email && formik.errors.email ? (
+                    <span className="text-red-500 text-xs italic">
+                      {formik.errors.email}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
@@ -171,16 +181,16 @@ const Signup = () => {
                     name="password"
                     type="password"
                     value={formik.values.password}
-                    onChange={formik.handleChange} onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     autoComplete="current-password"
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                  {formik.touched.password &&
-                      formik.errors.password ? (
-                        <span className="text-red-500 text-xs italic">
-                          {formik.errors.password}
-                        </span>
-                      ) : null}
+                  {formik.touched.password && formik.errors.password ? (
+                    <span className="text-red-500 text-xs italic">
+                      {formik.errors.password}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
@@ -197,16 +207,16 @@ const Signup = () => {
                     name="c_password"
                     type="password"
                     value={formik.values.c_password}
-                    onChange={formik.handleChange} onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     autoComplete="current-password"
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                   {formik.touched.c_password &&
-                      formik.errors.c_password ? (
-                        <span className="text-red-500 text-xs italic">
-                          {formik.errors.c_password}
-                        </span>
-                      ) : null}
+                  {formik.touched.c_password && formik.errors.c_password ? (
+                    <span className="text-red-500 text-xs italic">
+                      {formik.errors.c_password}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 

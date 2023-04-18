@@ -9,6 +9,7 @@ import Checkout from './features/checkout/Checkout';
 import Blog from './components/Blog';
 import Home from './components/Home';
 import Profile from './components/Profile';
+import Users from './components/Users';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
+        <Route path="/Users"  element={<Users/>}/>
         <Route path="/login"  element={<Login/>}/>
         <Route path="/signup"  element={<Signup/>}/>
         <Route path="/blog"  element={<Blog/>}/>

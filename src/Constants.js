@@ -5,7 +5,9 @@ export const USER_PROFILE_API = 'http://localhost:8000/api/subscribe';
 export const PLANS_API = 'http://localhost:8000/api/plans';
 export const SINGLE_PLAN_API = 'http://localhost:8000/api/plans';
 export const SUBSCRIPTION_API = "http://localhost:8000/api/subscribe";
-
+export const USER_LIST = 'http://localhost:8000/api/users';
+export const SEND_OTP_API = 'http://localhost:8000/api/send-otp';
+export const VERIFY_OTP_API = 'http://localhost:8000/api/verify-otp';
 
 // Error messages constants
 export const EMAIL_REQ = 'Please Enter Your Email';
@@ -17,6 +19,7 @@ export const LOGIN_SUCCESS = "User Loggedin Successfully !";
 export const TRY_AGAIN = "Please check Again!";
 export const NAME_REQ = 'Please Enter Your Name';
 export const MAX_LENGTH = 'Name cannot exceed 20 characters';
+export const PHONE_REQ = 'Please Enter Your phone number';
 export const REGISTER_SUCCESS = 'User Registered Successfully';
 export const CARD_NUMBER_REQ = "Please Enter Your Card Number";
 export const CARD_INVALID = "Invalid Card Details";

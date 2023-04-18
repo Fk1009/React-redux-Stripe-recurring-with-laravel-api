@@ -1,9 +1,11 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import NavBar from "../features/layouts/NavBar";
 import { fetchUserBytoken } from "../features/User/UserSlice";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { userSelector } from "../features/User/UserSlice";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const Profile = () => {
   const token = localStorage.getItem("token");
@@ -32,7 +34,6 @@ const Profile = () => {
                 <div className="md:flex no-wrap md:-mx-2 ">
                   <div className="w-full md:w-3/12 md:mx-2">
                     <div className="bg-white p-3 border-t-4 border-green-400">
-                      
                       <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
                         {user && user.name}
                       </h1>
@@ -98,6 +99,43 @@ const Profile = () => {
                               >
                                 {user && user.email}
                               </a>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2">
+                            <div className="px-4 py-2 font-semibold">
+                              Payment Mode Type
+                            </div>
+                            <div className="px-4 py-2 italic">
+                              {user && user.data && user.data.user
+                                ? user.data.user.pm_type
+                                : null}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2">
+                            <div className="px-4 py-2 font-semibold">
+                              Card verified
+                            </div>
+                            <div className="px-4 py-2">
+                              {user && user.data ? (
+                                user.data.user ? (
+                                  user.data.user.otp_verified == 1 ? (
+                                    <>
+                                      <CheckCircleTwoToneIcon
+                                        style={{ color: "green" }}
+                                      ></CheckCircleTwoToneIcon>
+                                      <span className="text-green-700 text-s italic">
+                                        Verified
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <CancelIcon
+                                      style={{ color: "red" }}
+                                    ></CancelIcon>
+                                  )
+                                ) : null
+                              ) : null}
                             </div>
                           </div>
                         </div>

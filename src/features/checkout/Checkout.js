@@ -1,16 +1,31 @@
-import React from "react";
+import React,{ useEffect,Fragment,useState} from "react";
 import NavBar from "../layouts/NavBar";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import { useFormik } from "formik";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { addSubscription, clearState } from "./CheckoutSlice";
-import { useParams } from "react-router";
-import { useEffect } from "react";
-import { fetchUserPlanById } from "./CheckoutSlice";
+import { fetchUserPlanById } from "./FetchUserPlanByIdSlice";
 import { checkoutState } from "./CheckoutSlice";
-import { Fragment } from "react";
-import { useFormik } from "formik";
-import toast from 'react-hot-toast';
-import { CARD_CVV_REQ, CARD_INVALID, CARD_MONTH_INVALID, CARD_MONTH_REQ, CARD_NUMBER_REQ, CARD_YEAR_INVALID, CARD_YEAR_REQ,INVALID_CVV } from "../../Constants";
+import { fetchUserPlanByIdState } from "./FetchUserPlanByIdSlice";
+import { otpState } from "./OtpSlice";
+import { fetchUserBytoken } from "../User/UserSlice";
+import { userSelector } from "../User/UserSlice";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
+import {
+  CARD_CVV_REQ,
+  CARD_INVALID,
+  CARD_MONTH_INVALID,
+  CARD_MONTH_REQ,
+  CARD_NUMBER_REQ,
+  CARD_YEAR_INVALID,
+  CARD_YEAR_REQ,
+  INVALID_CVV, 
+  PHONE_REQ} from "../../Constants";
+import OtpDialog from "./OtpDialog";
+import { sendOtp, verifyOtp } from "./OtpSlice";
+import { clearOtpState } from "./OtpSlice";
 
 const validateCheckoutCard = (userData) => {
   const errors = {};
@@ -36,9 +51,13 @@ const validateCheckoutCard = (userData) => {
     errors.exp_year = CARD_YEAR_INVALID;
   }
 
+  if (!userData.phone) {
+    errors.phone = PHONE_REQ;
+  }
+
   if (!userData.cvc) {
     errors.cvc = CARD_CVV_REQ;
-  }else if(!/^[0-9]{3}$/i.test(userData.cvc)){
+  } else if (!/^[0-9]{3}$/i.test(userData.cvc)) {
     errors.cvc = INVALID_CVV;
   }
 
@@ -49,9 +68,13 @@ function Checkout() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-  const { isFetching, isSuccess, isError, errorMessage,successMesssage } = useSelector(
-    checkoutState
-  );
+  const [loading, setLoading] = useState(false);
+  const { isFetching, isSuccess, isError, errorMessage } = useSelector(checkoutState);
+  const stateForCheckout = useSelector(checkoutState);
+  const stateForOtp = useSelector(otpState);
+  const userInfo = useSelector(userSelector);
+  const singlePlan = useSelector(fetchUserPlanByIdState);
+  const [dialogOpen, setDialogOpen] = useState(false);
   let { plan_id } = useParams();
 
   const formik = useFormik({
@@ -64,46 +87,91 @@ function Checkout() {
 
     validate: validateCheckoutCard,
     onSubmit: (values) => {
-      if (token != '') {
-        
-      
-      let params = {
-        ...values,
-        plan_id: plan_id,
-        token: token,
-       
+      if (token != "") {
+        let params = {
+          ...values,
+          plan_id: plan_id,
+          token: token,
+        };
+        dispatch(addSubscription(params));
+     
       }
-      dispatch(
-        addSubscription(params) 
-      );
-      if (isSuccess) {
-        dispatch(clearState());
-       navigate('/');
-      }
-      if (isError) {
-        toast.error(errorMessage);
-        dispatch(clearState());
-      }
-    }  },
+    },
   });
 
   useEffect(() => {
+    if (stateForCheckout.isSuccess) {
+      dispatch(clearState());
+      navigate("/");
+    }
+    if (stateForCheckout.isError) {
+      toast.error(errorMessage);
+      dispatch(clearState());
+    }
+  }, [stateForCheckout]);
+
+  
+
+  useEffect(() => {
+    if (token != null) {
     dispatch(
       fetchUserPlanById({
         token: localStorage.getItem("token"),
         planId: plan_id,
       })
     );
+  }
   }, []);
 
-  // useEffect(() => {
-  //   if (isError) {
-  //     dispatch(clearState());
-  //     navigate("/login");
-  //   }
-  // }, [isError]);
+  useEffect(() => {
+    if (token != null) {
+      dispatch(fetchUserBytoken({ token: token }));
+    }
+  }, []);
 
-  const singlePlan = useSelector(checkoutState);
+  const handleVerifyClick = (otp) => {
+    // Implement your logic to verify the OTP here
+    dispatch(
+      verifyOtp({
+        token: localStorage.getItem("token"),
+        otp: otp,
+      })
+    );
+    
+  };
+
+  useEffect(() => {
+    if (stateForOtp.isSuccess == true) {
+      toast.success(stateForOtp.data.message);
+      setDialogOpen(false);
+      dispatch(fetchUserBytoken({ token: token }));
+      dispatch(clearOtpState());
+    } 
+    
+    if  (stateForOtp.isError == true) {
+      toast.error(stateForOtp.errorMessage);
+      setDialogOpen(true);
+     dispatch(clearOtpState());
+    }
+  }, [stateForOtp]);
+
+  const handleOpenDialog = () => {
+    setLoading(true);
+    dispatch(
+      sendOtp({
+        token: localStorage.getItem("token"),
+        phone: formik.values.phone,
+      })
+    ).then(() => {
+      setLoading(false); // set loading state to false
+      setDialogOpen(true);
+      dispatch(clearOtpState());
+    });
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   return (
     <div className="container mx-auto">
@@ -129,7 +197,7 @@ function Checkout() {
                   >
                     Card Holder(Optional)
                   </label>
-                  <div className="relative">
+                  <div className="relative ">
                     <input
                       className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                       placeholder="Your full name here"
@@ -152,6 +220,27 @@ function Checkout() {
                         />
                       </svg>
                     </div>
+                  </div>
+                  <label
+                    for="card-holder"
+                    className="mt-4 mb-2 block text-sm font-medium"
+                  >
+                    Phone Number
+                  </label>
+                  <div className="relative ">
+                    <input
+                      className="w-full rounded-md border border-gray-200 px-4 py-3  text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="+91-xxxxxxxxxx"
+                      type="numeric"
+                      name="phone"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.phone && formik.errors.phone ? (
+                      <span className="text-red-500 text-xs italic">
+                        {formik.errors.phone}
+                      </span>
+                    ) : null}
                   </div>
                   <label
                     for="card-no"
@@ -193,56 +282,60 @@ function Checkout() {
                       </div>
                     </div>
                     <div>
-                    <input
-                      type="text"
-                      name="exp_month"
-                      className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="MM"
-                      value={formik.values.exp_month}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.exp_month && formik.errors.exp_month ? (
-                      <span className="text-red-500 text-xs italic">
-                        {formik.errors.exp_month}
-                      </span>
-                    ) : null}
+                      <input
+                        type="text"
+                        name="exp_month"
+                        className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="MM"
+                        value={formik.values.exp_month}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.exp_month && formik.errors.exp_month ? (
+                        <span className="text-red-500 text-xs italic">
+                          {formik.errors.exp_month}
+                        </span>
+                      ) : null}
                     </div>
                     <div>
-                    <input
-                      type="text"
-                      className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="YYYY"
-                      name="exp_year"
-                      value={formik.values.exp_year}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.exp_year && formik.errors.exp_year ? (
-                      <span className="text-red-500 text-xs italic">
-                        {formik.errors.exp_year}
-                      </span>
-                    ) : null}
+                      <input
+                        type="text"
+                        className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="YYYY"
+                        name="exp_year"
+                        value={formik.values.exp_year}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.exp_year && formik.errors.exp_year ? (
+                        <span className="text-red-500 text-xs italic">
+                          {formik.errors.exp_year}
+                        </span>
+                      ) : null}
                     </div>
-                  <div>
-                    <input
-                      type="text"
-                      className="w-5/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="CVC"
-                      name="cvc"
-                      value={formik.values.cvc}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.cvc && formik.errors.cvc ? (
-                      <span className="text-red-500 text-xs italic">{formik.errors.cvc}</span>
-                    ) : null}
-                   </div>
+                    <div>
+                      <input
+                        type="text"
+                        className="w-5/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="CVC"
+                        name="cvc"
+                        value={formik.values.cvc}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.cvc && formik.errors.cvc ? (
+                        <span className="text-red-500 text-xs italic">
+                          {formik.errors.cvc}
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
 
                   <div className="mt-6 border-t border-b py-2">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-gray-900">Plan Name</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Plan Name
+                      </p>
 
                       <p className="font-semibold text-gray-900">
                         {singlePlan && singlePlan.data
@@ -261,7 +354,9 @@ function Checkout() {
                       </p>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-gray-900">Subtotal</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Subtotal
+                      </p>
                       <p className="font-semibold text-gray-900">
                         {singlePlan && singlePlan.data
                           ? singlePlan.data.currency
@@ -284,15 +379,70 @@ function Checkout() {
                     </p>
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-                >
-                  Buy Beneficiary Plan
-                </button>
+
+                {userInfo && userInfo.data ? (
+                  userInfo.data.user ? (
+                    userInfo.data.user.otp_verified == 1 ? (
+                      <>
+                        <CheckCircleTwoToneIcon
+                          style={{ color: "green" }}
+                        ></CheckCircleTwoToneIcon>{" "}
+                        <span className="text-green-700 text-s italic">
+                          Card Verified
+                        </span>
+                        <button
+                          type="submit"
+                          className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                        >
+                          Proceed To Buy Beneficiary Plan 
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        variant="contained"
+                        color="primary"
+                        onClick={handleOpenDialog}
+                        className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                      >
+                        {loading ? (
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              stroke-width="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        ) : null}{" "}
+                        Buy Beneficiary Plan
+                      </button>
+                    )
+                  ) : null
+                ) : null}
               </form>
             </div>
           </div>
+
+          {/*open modal on click on buy plan  */}
+          <OtpDialog
+            loading={loading}
+            open={dialogOpen}
+            onClose={handleCloseDialog}
+            onVerify={handleVerifyClick}
+          />
         </Fragment>
       )}
     </div>

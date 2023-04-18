@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelectorPlan, userSelector, fetchUserBytoken, clearState,fetchUserPlans } from './UserSlice';
-import {RotatingLines} from 'react-loader-spinner';
+import { userSelector, fetchUserBytoken, clearState,fetchUserPlans } from './UserSlice';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../layouts/NavBar';
 import Plans from './Plans';
@@ -45,7 +44,7 @@ const Dashboard = () => {
   return (
       <>
     <div className="container mx-auto">
-      {isFetching ? (
+      {isFetching  ? (
        <div className="loading">
        <div className="loader"></div>
    </div>
