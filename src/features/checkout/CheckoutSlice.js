@@ -24,11 +24,11 @@ export const addSubscription = createAsyncThunk(
         }
       );
       let data = await response.json();
-      console.log('data', data, response.status);
-      if (response.status === 201) {
+      //console.log('data', data, response.status);
+      if (response.status === 200) {
         return data
       } else {
-        console.log('data', data, response.status);
+       // console.log('data', data, response.status);
         return thunkAPI.rejectWithValue(data);
       }
 
@@ -38,7 +38,7 @@ export const addSubscription = createAsyncThunk(
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log('Error', e.response.data);
+      //console.log('Error', e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -72,7 +72,7 @@ export const checkoutSlice = createSlice({
       state.data = payload;
     },
     [addSubscription.rejected]: (state, { payload }) => {
-      console.log(payload.message)
+      //console.log(payload.message)
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;

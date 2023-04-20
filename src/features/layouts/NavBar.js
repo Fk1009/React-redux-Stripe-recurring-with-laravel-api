@@ -43,12 +43,13 @@ const NavBar = () => {
             >
               <Link to="/">Pricing</Link>
             </a>
-            {/* <a
+            <a
               href="#"
               className="px-4 py-2 text-base font-medium text-gray-400 transition-colors rounded-full hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-700"
             >
-              Services
-            </a> */}
+               <Link to="/Users">Users</Link>
+              
+            </a>
             <a
               href="#"
               className="px-4 py-2 text-base font-medium text-gray-400 transition-colors rounded-full hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-700"
@@ -97,12 +98,9 @@ const NavBar = () => {
                   </button>
                   <ul class="dropdown-menu absolute hidden text-gray-700 pt-1">
                     <li class="">
-                      <a
-                        class="rounded-t bg-gray-200 hover: bg-gray-200 py-2 px-4 block whitespace-no-wrap"
-                        href="#"
-                      >
-                        <Link to="/profile">My Profile</Link>
-                      </a>
+                    
+                        <Link to="/profile"  class="rounded-t bg-gray-200 hover: bg-gray-200 py-2 px-4 block whitespace-no-wrap">My Profile</Link>
+                      
                     </li>
                   </ul>
                 </div>

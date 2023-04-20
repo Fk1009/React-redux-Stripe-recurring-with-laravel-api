@@ -17,7 +17,7 @@ export const fetchUserPlanById = createAsyncThunk(
         }
       );
       let data = await response.json();
-      console.log('data', data, response.status);
+      //console.log('data', data, response.status);
 
       if (response.status === 200) {
         return data; 
@@ -25,7 +25,7 @@ export const fetchUserPlanById = createAsyncThunk(
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log('Error', e.response.data);
+      //console.log('Error', e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }

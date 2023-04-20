@@ -60,7 +60,7 @@ const Profile = () => {
                     <div className="my-4"></div>
                   </div>
 
-                  <div className="w-full md:w-9/12 mx-2 h-64">
+                  <div className="w-full md:w-9/12 md:mx-2 h-64">
                     <div className="bg-white p-3 shadow-sm rounded-sm">
                       <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                         <span clas="text-green-500">
@@ -72,9 +72,9 @@ const Profile = () => {
                             stroke="currentColor"
                           >
                             <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
                               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                             />
                           </svg>
@@ -130,9 +130,14 @@ const Profile = () => {
                                       </span>
                                     </>
                                   ) : (
+                                    <>
                                     <CancelIcon
                                       style={{ color: "red" }}
                                     ></CancelIcon>
+                                    <span className="text-red-700 text-s italic">
+                                          Not Verified 
+                                      </span>
+                                      </>
                                   )
                                 ) : null
                               ) : null}

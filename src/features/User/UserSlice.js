@@ -29,7 +29,7 @@ export const signupUser = createAsyncThunk(
         return thunkAPI.rejectWithValue(data.errors.email[0]);
       }
     } catch (e) {
-      console.log('Error', e.response.data);
+      //console.log('Error', e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -54,7 +54,7 @@ export const loginUser = createAsyncThunk(
         }
       );
       let data = await response.json();
-      console.log('response', data);
+     // console.log('response', data);
       if (response.status === 200) {
         localStorage.setItem('token', data.token);
         return data;
@@ -62,7 +62,7 @@ export const loginUser = createAsyncThunk(
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log('Error', e.response.data);
+     // console.log('Error', e.response.data);
       thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -92,7 +92,7 @@ export const fetchUserBytoken = createAsyncThunk(
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log('Error', e.response.data);
+      //console.log('Error', e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -123,7 +123,7 @@ export const fetchUserPlans = createAsyncThunk(
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log('Error', e.response.data);
+      //console.log('Error', e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
   }
@@ -150,7 +150,7 @@ export const userSlice = createSlice({
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
-      console.log('payload', payload);
+      //console.log('payload', payload);
       state.isFetching = false;
       state.isSuccess = true;
       state.email = payload.email;
@@ -172,7 +172,7 @@ export const userSlice = createSlice({
       return state;
     },
     [loginUser.rejected]: (state, { payload }) => {
-      console.log('payload', payload);
+      //console.log('payload', payload);
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;
@@ -191,7 +191,7 @@ export const userSlice = createSlice({
       state.name = payload.user.name;
     },
     [fetchUserBytoken.rejected]: (state) => {
-      console.log('fetchUserBytoken');
+      //console.log('fetchUserBytoken');
       state.isFetching = false;
       state.isError = true;
     },
@@ -204,7 +204,7 @@ export const userSlice = createSlice({
       state.data = payload.data;
     },
     [fetchUserPlans.rejected]: (state) => {
-      console.log('fetchUserPlans');
+      //console.log('fetchUserPlans');
       state.isFetching = false;
       state.isError = true;
     },

@@ -90,7 +90,7 @@ const Signup = () => {
     }
 
     if (isError) {
-      console.log(errorMessage);
+      //console.log(errorMessage);
       toast.error(errorMessage);
       dispatch(clearState());
     }
