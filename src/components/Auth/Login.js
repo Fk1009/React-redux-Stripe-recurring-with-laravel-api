@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser, userSelector, clearState } from "./UserSlice";
+import { loginUser, userSelector, clearState } from "../../features/slice/UserSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -100,7 +100,6 @@ const Login = ({}) => {
                     name="email"
                     type="email"
                     autoComplete="email"
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     value={formik.values.email}
                     onChange={formik.handleChange}
@@ -127,7 +126,6 @@ const Login = ({}) => {
                     name="password"
                     type="password"
                     autoComplete="current-password"
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     value={formik.values.password}
                     onChange={formik.handleChange}

@@ -1,9 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { userSelector } from "../../features/slice/UserSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 function Plans(props) {
+  const [selected, setSelected] = useState(false);
+  const user = useSelector(userSelector);
+
+  useEffect(() => {
+    if (
+      user.data.user_current_subscription.stripe_price == props.plandata.plan_id
+    ) {
+      setSelected(true);
+    }
+  }, [user]);
+
   return (
-    <card className="rounded w-72 shadow-xl flex flex-col text-gray-200 ml-4">
+    <card
+      className={`rounded w-72 shadow-xl flex flex-col text-gray-200 ml-4 ${
+        selected ? "border-solid border-2 border-600" : ""
+      }`}
+    >
       {/* <p className="font-semibold bg-white bg-opacity-20 rounded-t px-4 py-2">PRO</p> */}
       <div className="flex flex-row items-center pt-8 bg-white bg-opacity-10 pl-12 pr-10 gap-3">
         <div className="flex flex-row gap-1">
@@ -123,16 +140,17 @@ function Plans(props) {
             />
           </svg>
         </div>
-
         <div className="col-span-11 text-sm flex items-center font-light pl-2">
           Unlimited free viewers
         </div>
-
         <div className="col-span-12 mt-20 mb-5 text-gray-100 shadow">
-         
-            
-          <Link  to={`/checkout/${props.plandata.id}`} className="btn btn-primary btn-block rounded-pill"> <button className="rounded hover:bg-teal-400 bg-teal-500 w-full py-3"> Choose your Plan</button></Link>
-          
+          <Link
+            to={`/checkout/${props.plandata.id}`}
+            className="btn btn-primary btn-block rounded-pill">
+            <button className="rounded hover:bg-teal-400 bg-teal-500 w-full py-3" >
+              Choose your Plan
+            </button>
+          </Link>
         </div>
       </div>
     </card>

@@ -1,9 +1,9 @@
 import { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearState } from "../User/UserSlice";
+import { clearState } from "../../features/slice/UserSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { userSelector } from "../User/UserSlice";
+import { userSelector } from "../../features/slice/UserSlice";
 
 const NavBar = () => {
   const dispatch = useDispatch();

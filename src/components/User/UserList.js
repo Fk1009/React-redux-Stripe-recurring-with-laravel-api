@@ -1,10 +1,10 @@
-import NavBar from "../features/layouts/NavBar";
+import NavBar from "../layouts/NavBar";
 import MUIDataTable from "mui-datatables";
 import React, { useState, useEffect,Fragment} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { userListSelector } from "../features/User/UserListSlice";
-import { fetchUserBytoken } from "../features/User/UserSlice";
-import { fetchUserList } from "../features/User/UserListSlice";
+import { userListSelector } from "../../features/slice/UserListSlice";
+import { fetchUserBytoken } from "../../features/slice/UserSlice";
+import { fetchUserList } from "../../features/slice/UserListSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";

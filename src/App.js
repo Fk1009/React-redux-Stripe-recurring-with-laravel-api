@@ -1,15 +1,15 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
-import Login from './features/User/Login';
-import Signup from './features/User/Signup';
-import Dashboard from './features/User/Dashboard';
+import Login from './components/Auth/Login';
+import Signup from './components/Auth/Signup';
+import Dashboard from './components/Plan/PlanPricing';
 import Protected from './helpers/Protected';
-import Checkout from './features/checkout/Checkout';
+import Checkout from './components/checkout/Checkout';
 import Blog from './components/Blog';
 import Home from './components/Home';
-import Profile from './components/Profile';
-import Users from './components/Users';
+import Profile from './components/User/Profile';
+import Users from './components/User/UserList';
 import NotFound from './components/NotFound';
 
 function App() {
@@ -17,12 +17,12 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-        <Route path="/Users"  element={<Users/>}/>
         <Route path="/login"  element={<Login/>}/>
         <Route path="/signup"  element={<Signup/>}/>
         <Route path="/blog"  element={<Blog/>}/>
         <Route path="/home"  element={<Home/>}/>
         {/* <Route path="/"  element={<Dashboard/>}/> */}
+        <Route path="/Users"  element={<Protected cmp = {Users} />}/>
         <Route path="/" element={ <Protected cmp = {Dashboard} /> } />
         <Route path="/profile" element={ <Protected cmp = {Profile} /> } />
         <Route path="/checkout/:plan_id" element={ <Protected cmp = {Checkout} /> } />

@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect } from "react";
-import NavBar from "../layouts/NavBar";
+import NavBar from "../../components/layouts/NavBar";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signupUser, userSelector, clearState } from "./UserSlice";
+import { userSelector,clearState,signupUser } from "../../features/slice/UserSlice";
 import { useNavigate } from "react-router-dom";
 import {
   NAME_REQ,

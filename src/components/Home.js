@@ -1,4 +1,4 @@
-import NavBar from '../features/layouts/NavBar';
+import NavBar from './layouts/NavBar';
 
 
 

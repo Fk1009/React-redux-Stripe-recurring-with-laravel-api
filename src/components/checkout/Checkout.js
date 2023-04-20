@@ -1,17 +1,17 @@
 import React, { useEffect, Fragment, useState } from "react";
-import NavBar from "../layouts/NavBar";
+import NavBar from "../../components/layouts/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { addSubscription, clearState } from "./CheckoutSlice";
-import { fetchUserPlanById } from "./FetchUserPlanByIdSlice";
-import { checkoutState } from "./CheckoutSlice";
-import { fetchUserPlanByIdState } from "./FetchUserPlanByIdSlice";
-import { otpState } from "./OtpSlice";
-import { fetchUserBytoken } from "../User/UserSlice";
-import { userSelector } from "../User/UserSlice";
+import { addSubscription, clearState } from "../../features/slice/CheckoutSlice";
+import { fetchUserPlanById } from "../../features/slice/FetchUserPlanByIdSlice";
+import { checkoutState } from "../../features/slice/CheckoutSlice";
+import { fetchUserPlanByIdState } from "../../features/slice/FetchUserPlanByIdSlice";
+import { otpState } from "../../features/slice/OtpSlice";
+import { fetchUserBytoken } from "../../features/slice/UserSlice";
+import { userSelector } from "../../features/slice/UserSlice";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import {
   CARD_CVV_REQ,
@@ -25,8 +25,8 @@ import {
   PHONE_REQ,
 } from "../../Constants";
 import OtpDialog from "./OtpDialog";
-import { sendOtp, verifyOtp } from "./OtpSlice";
-import { clearOtpState } from "./OtpSlice";
+import { sendOtp, verifyOtp } from "../../features/slice/OtpSlice";
+import { clearOtpState } from "../../features/slice/OtpSlice";
 
 const validateCheckoutCard = (userData) => {
   const errors = {};
@@ -84,7 +84,7 @@ function Checkout() {
       exp_month: "",
       exp_year: "",
       cvc: "",
-      phone:""
+      phone: "",
     },
 
     validate: validateCheckoutCard,
@@ -154,11 +154,11 @@ function Checkout() {
     }
   }, [stateForOtp]);
 
-  const handleOpenDialog = () => {
-     if (formik.values.phone == '') {
-     toast.error('Enter your phone number field');
-     return false;
-    }else{
+  const handleOpenOtpDialog = () => {
+    if (formik.values.phone == "") {
+      toast.error(PHONE_REQ);
+      return false;
+    } else {
       setLoading(true);
       dispatch(
         sendOtp({
@@ -170,12 +170,10 @@ function Checkout() {
         setDialogOpen(true);
         dispatch(clearOtpState());
       });
-
     }
-   
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseOtpDialog = () => {
     setDialogOpen(false);
   };
 
@@ -410,7 +408,7 @@ function Checkout() {
                           variant="contained"
                           color="primary"
                           class=" mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium  text-white bg-gray-900 items-center"
-                          onClick={handleOpenDialog}
+                          onClick={handleOpenOtpDialog}
                         >
                           {loading ? (
                             <svg
@@ -445,7 +443,7 @@ function Checkout() {
           <OtpDialog
             loading={loading}
             open={dialogOpen}
-            onClose={handleCloseDialog}
+            onClose={handleCloseOtpDialog}
             onVerify={handleVerifyClick}
           />
         </Fragment>

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { LOGIN_API, PLANS_API, REGISTER_API, USER_PROFILE_API } from '../../Constants';
+import { LOGIN_API, REGISTER_API, USER_PROFILE_API } from '../../Constants';
 
 export const signupUser = createAsyncThunk(
   'users/signupUser',
@@ -98,38 +98,6 @@ export const fetchUserBytoken = createAsyncThunk(
   }
 );
 
-
-export const fetchUserPlans = createAsyncThunk(
-  'users/fetchPlans',
-  async ({ token }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        PLANS_API,
-        {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      let data = await response.json();
-      //console.log('data', data, response.status);
-
-      if (response.status === 200) {
-        return data; 
-      } else {
-        return thunkAPI.rejectWithValue(data);
-      }
-    } catch (e) {
-      //console.log('Error', e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
-    }
-  }
-);
-
-
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -195,19 +163,7 @@ export const userSlice = createSlice({
       state.isFetching = false;
       state.isError = true;
     },
-    [fetchUserPlans.pending]: (state) => {
-      state.isFetching = true;
-    },
-    [fetchUserPlans.fulfilled]: (state, { payload }) => {
-      state.isFetching = false;
-      state.isSuccess = true;
-      state.data = payload.data;
-    },
-    [fetchUserPlans.rejected]: (state) => {
-      //console.log('fetchUserPlans');
-      state.isFetching = false;
-      state.isError = true;
-    },
+ 
   },
 });
 

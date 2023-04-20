@@ -1,36 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { SUBSCRIPTION_API } from '../../Constants';
+import { PLANS_API } from '../../Constants';
 
-export const addSubscription = createAsyncThunk(
-  'users/addSubscription',
-  async ({ token, card_number, exp_month, exp_year,cvc,plan_id }, thunkAPI) => {
+export const fetchUserPlans = createAsyncThunk(
+  'users/fetchPlans',
+  async ({ token }, thunkAPI) => {
     try {
       const response = await fetch(
-        SUBSCRIPTION_API,
+        PLANS_API,
         {
-          method: 'POST',
+          method: 'GET',
           headers: {
             Accept: 'application/json',
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            card_number,
-            exp_month,
-            exp_year,
-            cvc,
-            plan_id,
-          }),
         }
       );
       let data = await response.json();
       //console.log('data', data, response.status);
-      if (response.status === 200) {
-        return data
-      } else {
-       // console.log('data', data, response.status);
-        return thunkAPI.rejectWithValue(data);
-      }
 
       if (response.status === 200) {
         return data; 
@@ -45,9 +32,8 @@ export const addSubscription = createAsyncThunk(
 );
 
 
-
-export const checkoutSlice = createSlice({
-  name: 'checkout',
+export const planListSlice = createSlice({
+  name: 'plans',
   initialState: {
     isFetching: false,
     isSuccess: false,
@@ -63,23 +49,22 @@ export const checkoutSlice = createSlice({
     },
   },
   extraReducers: {
-    [addSubscription.pending]: (state) => {
+    [fetchUserPlans.pending]: (state) => {
       state.isFetching = true;
     },
-    [addSubscription.fulfilled]: (state, { payload }) => {
+    [fetchUserPlans.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
       state.isSuccess = true;
-      state.data = payload;
+      state.data = payload.data;
     },
-    [addSubscription.rejected]: (state, { payload }) => {
-      //console.log(payload.message)
+    [fetchUserPlans.rejected]: (state) => {
+      //console.log('fetchUserPlans');
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = payload.message;
     },
   },
 });
 
-export const { clearState } = checkoutSlice.actions;
+export const { clearState } = planListSlice.actions;
 
-export const checkoutState = (state) => state.checkout;
+export const planSelector = (state) => state.plans;

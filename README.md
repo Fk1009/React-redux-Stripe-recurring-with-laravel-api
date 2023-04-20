@@ -1,46 +1,64 @@
-# Getting Started with Create React App and Redux
+# How to install this app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+## Frontend Installation
 
-## Available Scripts
+Clone the project from git repository
 
-In the project directory, you can run:
+```bash
+git clone project url
+```
+Let’s say the cloned folder name is ‘redux-workflow’
+```bash
+cd redux-workflow
+```
+So, run npm start on your terminal
+```bash
+npm start
+```
+## Backend Installation
 
-### `npm start`
+Clone the project from git repository
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+git clone project(stripe-recurring-api) url
+```
+update or install composer
+```bash
+composer install
+```
+Install NPM Dependencies
+```bash
+npm install
+```
+Create a copy of your .env file
+```bash
+cp .env.example .env
+```
+Generate an app encryption key
+```bash
+php artisan key:generate
+```
+Create an empty database for your application or migrate if you dont want by below command
+```bash
+you can copy this file from root folder or import in database.
+```
+Skip this step if already import - 
+Migrate the database
+```bash
+php artisan migrate
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+Let’s say the cloned folder name is ‘stripe-recurring-api’
+```bash
+cd stripe-recurring-api
+```
+So, run artisan serve on your other terminal
+```bash
+php artisan serve
+```
+## Introduction
+This application includes the features with redux toolkit login, logout , signup and pricing plan with stripe recurring. you can choose one plan after choose, this plan redirect you to checkout page but before checkout you should have verified card after verification you can proceed to buy this plan using stripe recurring.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
+After all this steps you can also import collection of your apis from root folder of stripe recurring api folder of backend.

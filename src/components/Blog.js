@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "../features/layouts/NavBar";
+import NavBar from "./layouts/NavBar";
 
 function Blog() {
   return (

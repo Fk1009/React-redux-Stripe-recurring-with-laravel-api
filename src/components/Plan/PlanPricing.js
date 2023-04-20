@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { userSelector, fetchUserBytoken, clearState,fetchUserPlans } from './UserSlice';
+import { userSelector, fetchUserBytoken, clearState} from '../../features/slice/UserSlice';
+import { fetchUserPlans } from '../../features/slice/PlanListSlice';
+import { planSelector } from '../../features/slice/PlanListSlice';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../layouts/NavBar';
 import Plans from './Plans';
-
 
 
 const Dashboard = () => {
@@ -12,8 +13,10 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const { isFetching, isError } = useSelector(userSelector);
   const token = localStorage.getItem('token');
-  const user = useSelector(userSelector);
-  const planData = user.data;
+  const plans = useSelector(planSelector);
+  const planData = plans.data;
+  
+
  
   useEffect(() => {
     if (token != null) {

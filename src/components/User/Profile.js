@@ -1,9 +1,9 @@
 import { Fragment } from "react";
-import NavBar from "../features/layouts/NavBar";
-import { fetchUserBytoken } from "../features/User/UserSlice";
+import NavBar from "../layouts/NavBar";
+import { fetchUserBytoken } from "../../features/slice/UserSlice";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { userSelector } from "../features/User/UserSlice";
+import { userSelector } from "../../features/slice/UserSlice";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import CancelIcon from "@mui/icons-material/Cancel";
 
